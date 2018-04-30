@@ -24,11 +24,15 @@
         <processorPath useClasspath="true" />
         <module name="bk_common" />
         <module name="dubbo_bk" />
+        <module name="dubbo_consumer" />
+        <module name="dubbo_interface" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bk_common" target="1.8" />
       <module name="dubbo_bk" target="1.8" />
+      <module name="dubbo_consumer" target="1.8" />
+      <module name="dubbo_interface" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

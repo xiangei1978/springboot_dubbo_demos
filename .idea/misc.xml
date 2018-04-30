@@ -11,6 +11,8 @@
       <list>
         <option value="$PROJECT_DIR$/dubbo_bk/pom.xml" />
         <option value="$PROJECT_DIR$/bk_common/pom.xml" />
+        <option value="$PROJECT_DIR$/dubbo_interface/pom.xml" />
+        <option value="$PROJECT_DIR$/dubbo_consumer/pom.xml" />
       </list>
     </option>
   </component>

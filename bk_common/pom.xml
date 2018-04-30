@@ -16,7 +16,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.12.RELEASE</version>
+    <version>1.5.10.RELEASE</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -27,6 +27,7 @@
     <java.version>1.8</java.version>
     <fastjson.version>1.2.30</fastjson.version>
     <lombok.version>1.16.16</lombok.version>
+    <dubbo-spring-boot>1.0.0</dubbo-spring-boot>
   </properties>
 
   <dependencies>
@@ -117,6 +118,26 @@
     </dependency>
     <!--redis依赖-for springboot 1.5 结束-->
 
+    <!-- Spring Boot Dubbo 依赖 -->
+    <!--<dependency>-->
+      <!--<groupId>io.dubbo.springboot</groupId>-->
+      <!--<artifactId>spring-boot-starter-dubbo</artifactId>-->
+      <!--<version>${dubbo-spring-boot}</version>-->
+    <!--</dependency>-->
+
+    <!-- https://mvnrepository.com/artifact/com.gitee.reger/spring-boot-starter-dubbo -->
+    <dependency>
+      <groupId>com.gitee.reger</groupId>
+      <artifactId>spring-boot-starter-dubbo</artifactId>
+      <version>1.0.11</version>
+    </dependency>
+    <!-- Spring Boot Dubbo 依赖 -->
+
+    <dependency>
+      <groupId>com.davidxl</groupId>
+      <artifactId>dubbo_interface</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
   </dependencies>
 
