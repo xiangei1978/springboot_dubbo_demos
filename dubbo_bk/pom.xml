@@ -6,7 +6,7 @@
 	<groupId>com.davidxl</groupId>
 	<artifactId>dubbo_bk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<!-- 用tomcat时依赖 -->
 	<!--<packaging>war</packaging>-->
 
@@ -27,6 +27,36 @@
 		<fastjson.version>1.2.30</fastjson.version>
 		<lombok.version>1.16.16</lombok.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profiles.active>dev</profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<profiles.active>test</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>uat</id>
+			<properties>
+				<profiles.active>uat</profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>product</id>
+			<properties>
+				<profiles.active>product</profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
