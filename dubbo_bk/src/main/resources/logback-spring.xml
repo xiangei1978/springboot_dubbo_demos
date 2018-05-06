@@ -16,7 +16,7 @@
     <!-- 动态日志级别 -->
     <jmxConfigurator />
     <!-- 定义日志文件 输出位置 -->
-    <property name="LOG_DIR" value="${catalina.home:-.}/logs/biz" />
+    <property name="LOG_DIR" value="/Users/davidxl/data/logs/dubbo_bk" />
     <!-- 日志最大的历史 30天 -->
     <property name="MAX_HISTORY" value="30" />
     <property name="MAX_FILE_SIZE" value="10MB" />
@@ -140,7 +140,8 @@
     <logger name="org.apache" level="warn"/>
     <logger name="ch.qos.logback" level="warn"/>
     <logger name="com.alibaba.druid" level="warn"/>
-    <logger name="io.netty.**" level="INFO"/>
+    <!--<logger name="io.netty" level="info"/>-->
+    <!--<logger name="com.alibaba.dubbo" level="info"/>-->
 
     <!-- root级别:打印以下定义的级别日志及以上级别日志 -->
     <root level="DEBUG">

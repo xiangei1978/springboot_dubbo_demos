@@ -11,23 +11,53 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 
 @Api(value="用户模块")
 //@RequestMapping(value = {"/user"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RestController
+@Slf4j
 public class UserController {
 
 //    @Autowired
 //    @Reference(version="1.0.0")
     @Reference
     private UserService userService;
+
+
+    @ApiOperation(value="验证图形验证码", notes="验证图形验证码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "verifyCode", value = "verifyCode", defaultValue = "", dataType = "string")
+    })
+    @RequestMapping(value="/checkVerifyCode", method= RequestMethod.GET)
+    public CommonResult checkVerifyCode(HttpServletRequest httpServletRequest, String verifyCode ){
+        CommonResult r = new CommonResult();
+
+        String captchaId = (String) httpServletRequest.getSession().getAttribute("verifyCode");
+
+        log.debug("Session  vrifyCode "+captchaId+" form vrifyCode "+verifyCode);
+
+        if (!captchaId.equals(verifyCode)) {
+            r.setCode(-1);
+            r.setErrMsg("错误的验证码");
+
+        } else {
+            r.setCode(0);
+            r.setErrMsg("登录成功");
+
+        }
+
+        return   r ;
+
+    }
 
     @ApiOperation(value="新增用户", notes="新增用户")
     @ApiImplicitParams({

@@ -1,8 +1,10 @@
 package com.davidxl.config;
 
+import com.davidxl.config.properties.MyRedisProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,6 +20,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +31,8 @@ import java.util.Map;
 @Configuration
 @EnableCaching
 public class RedisConfig_1_5 extends CachingConfigurerSupport {
+    @Autowired
+    private MyRedisProperties myRedisProperties;
 
     @SuppressWarnings("rawtypes")
     @Bean
@@ -36,17 +41,22 @@ public class RedisConfig_1_5 extends CachingConfigurerSupport {
 
         //启用前缀
         rcm.setUsePrefix(true);
-        RedisCachePrefix cachePrefix = new RedisPrefix("demo");
+        RedisCachePrefix cachePrefix = new RedisPrefix(myRedisProperties.getRedisPrefix());
         rcm.setCachePrefix(cachePrefix);
 
         // 多个缓存的名称,目前只定义了一个
         //设置缓存过期时间(秒)
-        rcm.setDefaultExpiration(600);
+        rcm.setDefaultExpiration(myRedisProperties.getDefaultExpirationTime());
 
         //分别设置cache过期时间,单位秒;
         Map<String,Long> expiresMap=new HashMap<>();
-        expiresMap.put("users",30L);
-        expiresMap.put("products",5L);
+
+        List<String> list = myRedisProperties.getExpiresMap();
+        for (String str : list) {
+            expiresMap.put(str.split(":")[0],new Long(str.split(":")[1]));
+        }
+//        expiresMap.put("users",30L);
+//        expiresMap.put("products",5L);
         rcm.setExpires(expiresMap);
         return rcm;
 

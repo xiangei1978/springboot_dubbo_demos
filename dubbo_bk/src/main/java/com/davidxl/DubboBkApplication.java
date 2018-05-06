@@ -1,10 +1,12 @@
 package com.davidxl;
 
+import com.davidxl.config.properties.MyRocketmqProperties;
 import com.davidxl.web.ResponseBodyWrapFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.davidxl"})
+//@EnableConfigurationProperties({MyRocketmqProperties.class})
 @MapperScan("com.davidxl.dao")
 public class DubboBkApplication extends SpringBootServletInitializer  implements CommandLineRunner {
 

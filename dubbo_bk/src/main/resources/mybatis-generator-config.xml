@@ -27,7 +27,7 @@
 
         <!--生成实体类 指定包名 以及生成的地址 （可以自定义地址，但是路径不存在不会自动创建 使用Maven生成在target目录下，会自动创建） -->
         <javaModelGenerator targetPackage="com.davidxl.model"
-                            targetProject="src/main/java">
+                            targetProject="/Users/xianglei/data/springboot_demos/dubbo_interface/src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="true" />
             <!-- 从数据库返回的值被清理前后的空格 -->
@@ -40,13 +40,13 @@
 
         <!--生成SQLMAP文件 -->
         <sqlMapGenerator targetPackage="mapper"
-                         targetProject="src/main/resources">
+                         targetProject="/Users/xianglei/data/springboot_demos/bk_common/src/main/resources">
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
         <!--生成Dao文件 可以配置 common="XMLMAPPER"生成xml的dao实现 context id="DB2Tables" 修改targetRuntime="MyBatis3" -->
         <javaClientGenerator type="XMLMAPPER"
                              targetPackage="com.davidxl.dao"
-                             targetProject="src/main/java">
+                             targetProject="/Users/xianglei/data/springboot_demos/bk_common/src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
 
@@ -55,7 +55,7 @@
                <!--enableCountByExample="false" enableUpdateByExample="false"-->
                <!--enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false" />-->
-        <table tableName="user"
+        <table tableName="log_operation"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false" >
