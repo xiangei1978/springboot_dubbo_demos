@@ -1,6 +1,7 @@
 package com.davidxl.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.davidxl.common.CheckAuthority;
 import com.davidxl.common.type.NormalResultType;
 import com.davidxl.dubbo.service.UserService;
 import com.davidxl.model.User;
@@ -93,6 +94,7 @@ public class UserController {
             @ApiImplicitParam(paramType = "query", name = "id1", value = "用户id1", defaultValue = "1", dataType = "int")
     })
     @RequestMapping(value="/select", method= RequestMethod.GET)
+    @CheckAuthority(funcs = {"sys.test.pass","fjadkfaldaf.dld"})
     public CommonResult selectByPrimaryKey(Integer id   ){
 
         CommonResult r = new CommonResult();
