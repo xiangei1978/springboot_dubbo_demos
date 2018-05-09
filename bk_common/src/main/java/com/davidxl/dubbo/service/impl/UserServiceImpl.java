@@ -18,7 +18,7 @@ import java.util.Date;
 /**
  * Created by xianglei on 2018/4/17.
  */
-@Service
+@Service(version = "1.1.0")
 @Transactional
 //@CacheConfig(cacheNames = "users")
 public class UserServiceImpl implements UserService {

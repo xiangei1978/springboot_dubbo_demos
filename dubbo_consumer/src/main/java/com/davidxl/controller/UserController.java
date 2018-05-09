@@ -7,7 +7,6 @@ import com.davidxl.dubbo.service.UserService;
 import com.davidxl.model.User;
 import com.davidxl.web.CommonResult;
 import com.davidxl.web.NormalException;
-import com.reger.dubbo.annotation.Inject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,9 +27,8 @@ import java.util.*;
 @Slf4j
 public class UserController {
 
-//    @Autowired
-//    @Reference(version="1.0.0")
-    @Reference
+
+    @Reference(version = "1.1.0")
     private UserService userService;
 
 
@@ -115,18 +113,13 @@ public class UserController {
     @ApiOperation(value="获取用户详细信息", notes="根据url的id来获取用户详细信息")
     @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Integer", paramType = "path")
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<JsonResult> getUserById (@PathVariable(value = "id") Integer id){
-        JsonResult r = new JsonResult();
-        try {
-            User user = users.get(id);
-            r.setResult(user);
-            r.setStatus("ok");
-        } catch (Exception e) {
-            r.setResult(e.getClass().getName() + ":" + e.getMessage());
-            r.setStatus("error");
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok(r);
+    public CommonResult getUserById (@PathVariable(value = "id") Integer id){
+
+        CommonResult r = new CommonResult();
+        User user  = userService.selectByPrimaryKey(id);
+        r.setData(user);
+        return   r  ;
+
     }
 
     /**
