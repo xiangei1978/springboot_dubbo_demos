@@ -28,6 +28,7 @@
 		<lombok.version>1.16.16</lombok.version>
 		<dubbo-spring-boot>1.0.0</dubbo-spring-boot>
 		<rocketmq.version>4.2.0</rocketmq.version>
+		<quartz.version>2.3.0</quartz.version>
 	</properties>
 
 	<profiles>
@@ -194,6 +195,23 @@
 			<!--<version>${rocketmq.version}</version>-->
 		<!--</dependency>-->
 		<!-- rocketmq end-->
+
+		<!--quartz相关依赖-->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<!--定时任务需要依赖context模块-->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
 
 	</dependencies>
 

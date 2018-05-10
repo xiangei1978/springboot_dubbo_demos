@@ -1,8 +1,11 @@
 package com.davidxl;
 
 import com.davidxl.config.properties.MyRocketmqProperties;
+import com.davidxl.quartz.TestQuartsJob;
 import com.davidxl.web.ResponseBodyWrapFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
