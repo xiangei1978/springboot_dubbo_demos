@@ -80,8 +80,9 @@ public class RedisConfig_1_5 extends CachingConfigurerSupport {
         return template;
     }
 
-    @Bean
-    public KeyGenerator KeyGenerator() {
+
+    @Override
+    public KeyGenerator keyGenerator() {
         return new KeyGenerator() {
             @Override
             public Object generate(Object target, Method method, Object... params) {

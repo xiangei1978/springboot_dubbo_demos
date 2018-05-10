@@ -42,11 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value="users", key="'user_'+#id")
-//    @Cacheable(value="products", key="'user_'+#id")
+    //使用自己定义的key
+//    @Cacheable(value="users", key="'user_'+#id")
+    //使用keyGenerator
+    @Cacheable(value="users" )
     public User selectByPrimaryKey(Integer id) {
-
         return userMapper.selectByPrimaryKey(id);
-
     }
 }
