@@ -1,5 +1,6 @@
 package com.davidxl.config;
 
+import com.davidxl.config.event.RocketmqEvent;
 import com.davidxl.config.properties.MyRocketmqProperties;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,14 +16,10 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Description;
-import org.springframework.context.annotation.Primary;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

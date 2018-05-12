@@ -1,6 +1,6 @@
 package com.davidxl.rocket_consumer;
 
-import com.davidxl.config.RocketmqEvent;
+import com.davidxl.config.event.RocketmqEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class ConsumerDemo {
-    @EventListener(condition = "#event.msgs[0].topic=='TopicTest1' && #event.msgs[0].tags=='TagA'")
+    @EventListener(condition = "#event.msgs[0].topic=='TopicTest1' && ( #event.msgs[0].tags=='TagA' || #event.msgs[0].tags=='TagC') ")
     public void rocketmqMsgListen(RocketmqEvent event) {
 //      DefaultMQPushConsumer consumer = event.getConsumer();
         try {
             Thread.sleep(1000);
             String body =new String(event.getMsgs().get(0).getBody(),"utf-8");
-            log.info("监听到一个消息达到-TopicTest1-TagA：" + event.getMsgs().get(0).getMsgId() +
+            log.info("监听到一个消息达到-TopicTest1-TagA or TagC：" + event.getMsgs().get(0).getMsgId() +
                     "\n msg = " + event.getMsgs().get(0).toString() +
                     "\n body = " + body);
             // TODO 进行业务处理

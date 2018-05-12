@@ -1,4 +1,4 @@
-package com.davidxl.config;
+package com.davidxl.config.event;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.message.MessageExt;
