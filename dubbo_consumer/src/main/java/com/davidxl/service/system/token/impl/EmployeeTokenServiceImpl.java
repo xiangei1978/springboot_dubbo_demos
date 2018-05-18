@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class EmployeeTokenServiceImpl  implements EmployeeTokenService {
         return employeeCache;
     }
 
-    @Cacheable(value = "employeeID_token-cache", key =  "'employeeID_'+#sysEmployee.employeeId")
+    @CachePut(value = "employeeID_token-cache", key =  "'employeeID_'+#sysEmployee.employeeId")
     public  EmployeeTokenCache createEmployeeNewToken(HttpServletRequest httpServletRequest, SysEmployee sysEmployee)
     {
         EmployeeTokenCache eCache = new EmployeeTokenCache();

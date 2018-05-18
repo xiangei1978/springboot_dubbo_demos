@@ -54,7 +54,7 @@ public class TokenController {
         SysEmployee employee =  sysEmployeeService.selectByLoginIdAndPass(loginID,DigestUtils.sha1Hex(password));
 
         Assert.notNull(employee,"登陆\"用户名\" 或 \"密码\" 错误！");
-        employeeTokenService.clearEmployeeFromCache(employee.getEmployeeId());
+       // employeeTokenService.clearEmployeeFromCache(employee.getEmployeeId());
         r.setData(employeeTokenService.createEmployeeNewToken(httpServletRequest, employee));
         return   r  ;
     }
