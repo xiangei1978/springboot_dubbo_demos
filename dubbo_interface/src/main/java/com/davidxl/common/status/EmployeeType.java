@@ -1,4 +1,6 @@
-package com.davidxl.common;
+package com.davidxl.common.status;
+
+import com.davidxl.common.BaseEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,23 +8,22 @@ import java.util.Map;
 /**
  * Created by xianglei on 2018/4/17.
  */
-public enum SexType implements BaseEnum<SexType, String> {
-    male("male","男性"),
-    female("female","女性"),
-    unknown("unknown","未知");
+public enum EmployeeType implements BaseEnum<EmployeeType, String> {
+    isAdmin("isAdmin","管理员"),
+    isUser("isUser","普通用户");
 
     private String value;
     private String displayName;
 
 
-    static Map<String,SexType> enumMap=new HashMap<String, SexType>();
+    static Map<String,EmployeeType> enumMap=new HashMap<String, EmployeeType>();
     static{
-        for(SexType type: SexType.values()){
+        for(EmployeeType type: EmployeeType.values()){
             enumMap.put(type.getValue(), type);
         }
     }
 
-    private SexType(String value,String displayName) {
+    private EmployeeType(String value, String displayName) {
         this.value=value;
         this.displayName=displayName;
     }
@@ -45,7 +46,7 @@ public enum SexType implements BaseEnum<SexType, String> {
         this.displayName = displayName;
     }
 
-    public static SexType getEnum(String value) {
+    public static EmployeeType getEnum(String value) {
         return enumMap.get(value);
     }
 }

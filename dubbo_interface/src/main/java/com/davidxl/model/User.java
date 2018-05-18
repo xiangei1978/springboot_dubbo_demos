@@ -1,6 +1,6 @@
 package com.davidxl.model;
 
-import com.davidxl.common.SexType;
+import com.davidxl.common.status.SexType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

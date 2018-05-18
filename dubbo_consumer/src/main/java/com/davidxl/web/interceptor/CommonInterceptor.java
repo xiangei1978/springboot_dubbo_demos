@@ -1,9 +1,19 @@
 package com.davidxl.web.interceptor;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.davidxl.common.CheckAuthority;
+import com.davidxl.common.status.TokenStatus;
+import com.davidxl.model.sys.EmployeeTokenCache;
+import com.davidxl.service.system.token.EmployeeTokenService;
+import com.davidxl.web.ResponseHttpResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,15 +21,30 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CommonInterceptor extends HandlerInterceptorAdapter {
 
+    @Autowired
+    EmployeeTokenService employeeTokenService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("preHandler："+handler.getClass());
+//        if (true)
+//        return true;
+
+        TokenStatus tokenStatus =  validateTokenByUserAgent( request,  response);
+
+        if (!tokenStatus.equals(TokenStatus.ok)){
+            return false;
+        }
+
+
         // 将handler强转为HandlerMethod, 前面已经证实这个handler就是HandlerMethod
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         // 从方法处理器中获取出要调用的方法
@@ -67,4 +92,79 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         System.out.println("afterCompletion"+handler.getClass());
     }
+
+
+    private  void checkToken(HttpServletRequest request,Object handler){
+
+
+    }
+
+
+    private TokenStatus validateTokenByUserAgent(HttpServletRequest httpServletRequest, HttpServletResponse response  ) throws IllegalAccessException,Exception {
+        //其他请求获取头信息
+        final String authHeader = httpServletRequest.getHeader("token");
+        try {
+            //如果没有header信息
+            if (authHeader == null || authHeader.trim() == "") {
+                throw new SignatureException("获取客户端token异常");
+            }
+
+            //获取jwt实体对象接口实例
+            final Claims claims = Jwts.parser().setSigningKey("davidxl")
+                    .parseClaimsJws(authHeader).getBody();
+            //从数据库中获取token
+            EmployeeTokenCache employeeTokenCache = employeeTokenService.getEmployeeFromCache(new Integer(claims.getSubject()));
+
+            if (employeeTokenCache==null){
+                throw new SignatureException("token已过期");
+//                return TokenStatus.timeout;
+            }
+            else{
+                if(!employeeTokenCache.getToken().equals(authHeader))
+                {
+                    //在其他地方被注销
+                    throw new SignatureException("用户[" + employeeTokenCache.getEmployeeName() + "]重复登录：ip = " +employeeTokenCache.getLogin_ip() );
+
+                }else
+                {
+                    return TokenStatus.ok;
+                }
+            }
+        }
+        //验证异常处理
+        catch (SignatureException | ExpiredJwtException e)
+        {
+
+            writeResponseWhenError(e.getMessage(),response);
+            return TokenStatus.beOverided;
+        }
+        //出现异常时
+        catch (final Exception e)
+        {
+            writeResponseWhenError(e.getMessage(),response);
+            return TokenStatus.err;
+        }
+
+    }
+    private void writeResponseWhenError(String errMsg ,HttpServletResponse response){
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+
+        ResponseHttpResult baseResponse = new ResponseHttpResult(500,null,errMsg);
+
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            out.append(JSONObject.toJSONString(baseResponse));
+        } catch (IOException e) {
+            // log.error("进行JsonResponse输出时发生错误, baseRequest:{}, baseResponse:{}", baseRequest, baseResponse, e);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
+
+
 }

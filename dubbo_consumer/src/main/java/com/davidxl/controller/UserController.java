@@ -5,6 +5,7 @@ import com.davidxl.common.CheckAuthority;
 import com.davidxl.common.type.NormalResultType;
 import com.davidxl.dubbo.service.UserService;
 import com.davidxl.model.User;
+import com.davidxl.util.VerifyCodeUtil;
 import com.davidxl.web.CommonResult;
 import com.davidxl.web.NormalException;
 import io.swagger.annotations.Api;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -40,11 +42,11 @@ public class UserController {
     public CommonResult checkVerifyCode(HttpServletRequest httpServletRequest, String verifyCode ){
         CommonResult r = new CommonResult();
 
-        String captchaId = (String) httpServletRequest.getSession().getAttribute("verifyCode");
+//        String captchaId = VerifyCodeUtil.checkVerifyCode(httpServletRequest,verifyCode);
+//
+//        log.debug("Session  vrifyCode "+captchaId+" form vrifyCode "+verifyCode);
 
-        log.debug("Session  vrifyCode "+captchaId+" form vrifyCode "+verifyCode);
-
-        if (!captchaId.equals(verifyCode)) {
+        if (!VerifyCodeUtil.checkVerifyCode(httpServletRequest,verifyCode)) {
             r.setCode(-1);
             r.setErrMsg("错误的验证码");
 
@@ -60,7 +62,8 @@ public class UserController {
 
     @ApiOperation(value="新增用户", notes="新增用户")
     @ApiImplicitParams({
-                      @ApiImplicitParam(paramType = "body", name = "user",
+            @ApiImplicitParam(paramType = "header", name = "token", value = "令牌", defaultValue = "39MEHmCu4BmumCRSAriORS4lUXcQYSU9cM4DRUJCLL6YWXAvS4igTbSWEQbpvC8U_NlBH8NnwWzfdNtwDDwdzXXQE7wbnt7it31ThNqHnJo", required = true, dataType = "string"),
+            @ApiImplicitParam(paramType = "body", name = "user",
                               value = "{ \"name\": \"xlr\", \"age\": 3, \"amount\": 10.11, \"sex\": \"male=男;female=女;unknown=未知\"  }", required = true, dataType = "string")
     })
     @RequestMapping(value="/insert", method= RequestMethod.POST)
@@ -69,8 +72,10 @@ public class UserController {
 //        if (1==1)
 //            throw new RuntimeException("测试发生异常了");
 
-        if (user.getAge()==3)
-            throw  new NormalException(-1,"三岁无法注册!");
+//        if (user.getAge()==3)
+//            throw  new NormalException(-1,"三岁无法注册!");
+
+        Assert.state(user.getAge()!=3,"三岁无法注册!");
 
 
         if (userService.insertSelective(user) !=1)

@@ -1,6 +1,7 @@
 package com.davidxl.controller;
 
 
+import com.davidxl.util.VerifyCodeUtil;
 import com.davidxl.web.CommonResult;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.swagger.annotations.Api;
@@ -37,7 +38,7 @@ public class CommonController {
         try {
             //生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
-            httpServletRequest.getSession().setAttribute("verifyCode", createText);
+            VerifyCodeUtil.createVerifyCode(httpServletRequest,createText);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);
