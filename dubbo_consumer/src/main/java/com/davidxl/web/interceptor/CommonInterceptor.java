@@ -38,6 +38,8 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 //        if (true)
 //        return true;
 
+
+
         TokenStatus tokenStatus =  validateTokenByUserAgent( request,  response);
 
         if (!tokenStatus.equals(TokenStatus.ok)){
@@ -127,6 +129,7 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 
                 }else
                 {
+                    httpServletRequest.setAttribute("employeeID",employeeTokenCache.getEmployeeID());
                     return TokenStatus.ok;
                 }
             }

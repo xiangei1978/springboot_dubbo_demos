@@ -67,8 +67,10 @@ public class UserController {
                               value = "{ \"name\": \"xlr\", \"age\": 3, \"amount\": 10.11, \"sex\": \"male=男;female=女;unknown=未知\"  }", required = true, dataType = "string")
     })
     @RequestMapping(value="/insert", method= RequestMethod.POST)
-    public CommonResult insertUser(@RequestBody User user){
+    public CommonResult insertUser(@RequestBody User user,@RequestAttribute Integer employeeID){
         CommonResult r = new CommonResult();
+
+        System.out.printf("" + employeeID);
 //        if (1==1)
 //            throw new RuntimeException("测试发生异常了");
 
