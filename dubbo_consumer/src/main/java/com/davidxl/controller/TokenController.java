@@ -35,19 +35,19 @@ public class TokenController {
 
     @ApiOperation(value="获取token", notes="获取token")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "loginID", value = "用户id", defaultValue = "user1", dataType = "string"),
-            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", defaultValue = "password", dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "loginID", value = "用户id", defaultValue = "admin", dataType = "string"),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", defaultValue = "admin", dataType = "string"),
             @ApiImplicitParam(paramType = "query", name = "verifyCode", value = "验证码", defaultValue = "1234", dataType = "string"),
     })
     @RequestMapping(value="/getToken", method= RequestMethod.GET)
     public CommonResult getToken(HttpServletRequest httpServletRequest, String loginID, String password, String  verifyCode ){
 
         CommonResult r = new CommonResult();
-
-        if (!VerifyCodeUtil.checkVerifyCode(httpServletRequest,verifyCode)){
-            r.setErrMsg("验证码验证错误");
-            return r;
-        }
+//      测试jmeter暂时跳过
+//        if (!VerifyCodeUtil.checkVerifyCode(httpServletRequest,verifyCode)){
+//            r.setErrMsg("验证码验证错误");
+//            return r;
+//        }
 
         //略过验证用户名密码合法性
         //check user

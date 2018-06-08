@@ -17,8 +17,13 @@ import org.springframework.stereotype.Component;
 public class RedisSequenceFactory {
 //    @Autowired
 //    RedisTemplate<String, String> mRedisTemp
+    private String  redis_key;
+
+
     @Autowired
-    StringRedisTemplate mRedisTemp;
+    StringRedisTemplate stringRedisTemplate ;
+
+
 
     /**
      * @Title: set
@@ -28,7 +33,7 @@ public class RedisSequenceFactory {
      * @param expireTime
      */
     public void set(String key,int value,Date expireTime) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         counter.set(value);
         counter.expireAt(expireTime);
     }
@@ -42,7 +47,7 @@ public class RedisSequenceFactory {
      * @param unit
      */
     public void set(String key,int value,long timeout,TimeUnit unit) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         counter.set(value);
         counter.expire(timeout, unit);
     }
@@ -54,7 +59,7 @@ public class RedisSequenceFactory {
      * @return
      */
     public long generate(String key) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         return counter.incrementAndGet();
     }
 
@@ -65,7 +70,7 @@ public class RedisSequenceFactory {
      * @return
      */
     public long generate(String key,Date expireTime) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         counter.expireAt(expireTime);
         return counter.incrementAndGet();
     }
@@ -78,7 +83,7 @@ public class RedisSequenceFactory {
      * @return
      */
     public long generate(String key,int increment) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         return counter.addAndGet(increment);
     }
 
@@ -91,7 +96,7 @@ public class RedisSequenceFactory {
      * @return
      */
     public long generate(String key,int increment,Date expireTime) {
-        RedisAtomicLong counter = new RedisAtomicLong(key, mRedisTemp.getConnectionFactory());
+        RedisAtomicLong counter = new RedisAtomicLong(key, stringRedisTemplate.getConnectionFactory());
         counter.expireAt(expireTime);
         return counter.addAndGet(increment);
     }

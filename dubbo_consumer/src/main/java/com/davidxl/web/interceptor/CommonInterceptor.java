@@ -12,6 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -27,6 +28,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 public class CommonInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
@@ -34,7 +36,7 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("preHandler："+handler.getClass());
+        log.debug("preHandler："+handler.getClass());
 //        if (true)
 //        return true;
 
@@ -124,6 +126,7 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
             else{
                 if(!employeeTokenCache.getToken().equals(authHeader))
                 {
+                    log.warn("Header_token = " + authHeader + "\n cache_token = " );
                     //在其他地方被注销
                     throw new SignatureException("用户[" + employeeTokenCache.getEmployeeName() + "]重复登录：ip = " +employeeTokenCache.getLogin_ip() );
 

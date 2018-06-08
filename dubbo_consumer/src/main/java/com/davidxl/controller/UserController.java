@@ -2,10 +2,15 @@ package com.davidxl.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.davidxl.common.CheckAuthority;
+import com.davidxl.common.Global;
+import com.davidxl.common.ZKLockPrefix;
 import com.davidxl.common.type.NormalResultType;
 import com.davidxl.dubbo.service.UserService;
 import com.davidxl.model.User;
 import com.davidxl.util.VerifyCodeUtil;
+import com.davidxl.util.zk.LockZookeeperClientFactory;
+import com.davidxl.util.zk.ZKDistributedLock;
+import com.davidxl.util.zk.ZookeeperSharedLock;
 import com.davidxl.web.CommonResult;
 import com.davidxl.web.NormalException;
 import io.swagger.annotations.Api;
@@ -21,6 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @Api(value="用户模块")
@@ -32,6 +38,9 @@ public class UserController {
 
     @Reference(version = "1.1.0")
     private UserService userService;
+
+    @Autowired
+    private LockZookeeperClientFactory lockZookeeperClientFactory;
 
 
     @ApiOperation(value="验证图形验证码", notes="验证图形验证码")
@@ -67,7 +76,7 @@ public class UserController {
                               value = "{ \"name\": \"xlr\", \"age\": 3, \"amount\": 10.11, \"sex\": \"male=男;female=女;unknown=未知\"  }", required = true, dataType = "string")
     })
     @RequestMapping(value="/insert", method= RequestMethod.POST)
-    public CommonResult insertUser(@RequestBody User user,@RequestAttribute Integer employeeID){
+    public CommonResult insertUser(@RequestBody User user,@ApiIgnore  @RequestAttribute Integer employeeID){
         CommonResult r = new CommonResult();
 
         System.out.printf("" + employeeID);
@@ -78,10 +87,37 @@ public class UserController {
 //            throw  new NormalException(-1,"三岁无法注册!");
 
         Assert.state(user.getAge()!=3,"三岁无法注册!");
+//        int num=(int)(Math.random()*9);
+
+//        ZKDistributedLock lock   = new ZKDistributedLock("192.168.137.253:2181",ZKLockPrefix.UserLockPrefix.toString() );
+//        try {
+//            lock.lock();
+//
+//            if (userService.insertSelective(user) !=1)
+//                    throw  new NormalException(NormalResultType.err_database_insert);
+//
+//        } catch (Exception e){
+//
+//        } finally {
+//            //共享资源
+//            try {
+//                //释放锁
+//                if(lock != null)
+//                    lock.unlock();
+//            } catch (Exception e) {
+//                throw new RuntimeException();
+//            }
+//        }
+
+        for (int i = 0; i <1 ; i++) {
+            if (userService.incUserAge(1) !=1)
+                throw  new NormalException(NormalResultType.err_database_update);
+        }
 
 
-        if (userService.insertSelective(user) !=1)
-            throw  new NormalException(NormalResultType.err_database_insert);
+
+//                if (userService.insertSelective(user) !=1)
+//                    throw  new NormalException(NormalResultType.err_database_insert);
 
 //        User user = new User();
 //        user.setName(name);

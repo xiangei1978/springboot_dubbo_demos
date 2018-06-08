@@ -9,5 +9,7 @@ public interface UserService {
 
     int insertSelective(User user);
 
+    int incUserAge(Integer id);
+
     User selectByPrimaryKey(Integer id);
 }

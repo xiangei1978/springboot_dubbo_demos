@@ -1,10 +1,12 @@
 package com.davidxl;
 
 import com.davidxl.config.properties.KaptchaProperties;
+import com.davidxl.util.zk.LockZookeeperClientFactory;
 import com.davidxl.web.ResponseBodyWrapFactoryBean;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -55,4 +57,20 @@ public class DubboConsumerApplication extends SpringBootServletInitializer  impl
 	public ResponseBodyWrapFactoryBean getResponseBodyWrap() {
 		return new ResponseBodyWrapFactoryBean();
 	}
+
+	@Bean
+	public LockZookeeperClientFactory lockZookeeperClientFactory(@Value("${zookeeper.ipPort}") String ipPort, @Value("${zookeeper.basePath}") String basePath,
+																 @Value("${zookeeper.sessionTimeoutMs}") int sessionTimeoutMs, @Value("${zookeeper.connectionTimeoutMs}") int connectionTimeoutMs,
+																 @Value("${zookeeper.hasGc}") boolean hasGc, @Value("${zookeeper.gcIntervalSecond}") int gcIntervalSecond) {
+		LockZookeeperClientFactory lockZookeeperClientFactory = new LockZookeeperClientFactory();
+		lockZookeeperClientFactory.setZookeeperIpPort(ipPort);
+		lockZookeeperClientFactory.setBasePath(basePath);
+		lockZookeeperClientFactory.setHasGc(hasGc);
+		lockZookeeperClientFactory.setSessionTimeoutMs(connectionTimeoutMs);
+		lockZookeeperClientFactory.setGcIntervalSecond(gcIntervalSecond);
+		return lockZookeeperClientFactory;
+	}
+
+
+
 }

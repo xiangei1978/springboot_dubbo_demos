@@ -1,13 +1,21 @@
 package com.davidxl.controller;
 
 
+import com.davidxl.common.Global;
+import com.davidxl.common.ZKLockPrefix;
+import com.davidxl.common.type.NormalResultType;
 import com.davidxl.config.properties.MyRocketmqProperties;
 import com.davidxl.model.User;
+import com.davidxl.util.zk.LockZookeeperClientFactory;
+import com.davidxl.util.zk.ZKDistributedLock;
+import com.davidxl.util.zk.ZookeeperSharedLock;
 import com.davidxl.web.CommonResult;
+import com.davidxl.web.NormalException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.*;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.common.message.MessageQueue;
@@ -18,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by xianglei on 2018/4/24.
@@ -25,6 +34,7 @@ import java.util.List;
 
 @Api(value="RocketMQ 测试controller")
 @RestController
+@Slf4j
 public class RocketMQTestController {
 
     @Autowired
@@ -33,8 +43,69 @@ public class RocketMQTestController {
     @Autowired
     private TransactionMQProducer transactionProducer;
 
+    @Autowired
+    private LockZookeeperClientFactory lockZookeeperClientFactory;
+
 
     private int i = 0;
+
+
+
+    @ApiOperation(value="动态日志测试", notes="动态日志测试")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "str",
+                    value = "str", required = true, dataType = "string")
+    })
+    @RequestMapping(value="/autoLog", method= RequestMethod.POST)
+    public CommonResult autoLog(String str){
+        CommonResult r = new CommonResult();
+
+
+
+
+        ZookeeperSharedLock zookeeperSharedLock = new ZookeeperSharedLock(lockZookeeperClientFactory,
+                ZKLockPrefix.UserLockPrefix.toString()   );
+        try {
+            boolean result = zookeeperSharedLock.lock(Global.DISTRIBUTED_LOCK_WAIT_TIME, TimeUnit.MILLISECONDS);
+            if (result) {//获取锁成功
+
+                for (int j = 0; j <100 ; j++) {
+                    Thread.sleep(1000);
+                    log.debug("动态日志测试： autoLog - "+j);
+                }
+
+                Thread.sleep(10000);
+                aa(str);
+                log.info("动态日志测试： autoLog"+str);
+                Thread.sleep(10000);
+                log.error("动态日志测试： autoLog"+str);
+
+            }
+        } catch (Exception e) {
+            log.error("接口异常",e);
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                //释放锁
+                zookeeperSharedLock.release();
+            } catch (Exception e) {
+                throw new RuntimeException();
+            }
+        }
+
+
+
+
+        return   r ;
+
+    }
+
+    private void  aa(String str){
+        log.info("aa: " + str);
+        str = str + "456";
+
+    }
+
 
     @ApiOperation(value="RocketMQ sendMsg 测试", notes="RocketMQ sendMsg 测试")
     @ApiImplicitParams({
@@ -42,7 +113,7 @@ public class RocketMQTestController {
                     value = "{ \"name\": \"xlr\", \"age\": 3, \"amount\": 10.11, \"sex\": \"male=男;female=女;unknown=未知\"  }", required = true, dataType = "string")
     })
     @RequestMapping(value="/sendMsg_TagA", method= RequestMethod.POST)
-    public CommonResult sendMsg_TagA(@RequestBody User user){
+    public CommonResult sendMsg_TagA(String str){
         CommonResult r = new CommonResult();
                 Message msg = new Message("TopicTest1", // topic
                 "TagA", // tag
